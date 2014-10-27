@@ -18,7 +18,11 @@
         PlayingCard *otherCard = [otherCards firstObject];
         if (otherCard.rank == self.rank) {
             score = 4;
+            NSLog(@"Matched rank for %@ and %@", self.contents, otherCard.contents);
         } else if (otherCard.suit == self.suit) {
+            
+            NSLog(@"Matched suit for %@ and %@", self.contents, otherCard.contents);
+
             score = 1;
         }
     }

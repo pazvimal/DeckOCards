@@ -16,11 +16,8 @@
 @property (strong, nonatomic) Deck *deck;
 @property (strong, nonatomic) CardMatchingGame  *game;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
-@property (nonatomic, getter = isSwitchOn) BOOL on;   // if On then 3 card match
-@property (weak, nonatomic) IBOutlet UISwitch *gameModeSwitch;
-
 @property (weak, nonatomic) IBOutlet UISegmentedControl *gameModeSegmentedControl;
-
+@property (strong, nonatomic) NSString *matchMode;
 @end
 
 @implementation CardGameViewController
@@ -32,6 +29,11 @@
     
     return _game;
     
+}
+
+-(NSString *)matchMode
+{
+    return [self.gameModeSegmentedControl titleForSegmentAtIndex:self.gameModeSegmentedControl.selectedSegmentIndex];
 }
 
 - (Deck *)deck
@@ -46,31 +48,17 @@
 }
 
 - (IBAction)touchCardButton:(UIButton *)sender {
-    int chosenButtonIndex = [self.cardButtons indexOfObject:sender];
-    [self.game chooseCardAtIndex:chosenButtonIndex];
     
     if (self.gameModeSegmentedControl.enabled) {
         self.gameModeSegmentedControl.enabled = NO;
-    }
-    if(self.gameModeSwitch.enabled) {
-        self.gameModeSwitch.enabled = NO;
-    }
-    
-    if (self.gameModeSegmentedControl.selectedSegmentIndex == 0) {
-        //2 card match so nothing changes
-        [self updateUI];
-    } else {
-        // 3 card match so need to make sure 3 cards are selected
-        int count = 0;
-        for(UIButton *cardButton in self.cardButtons) {
-            if(cardButton.isSelected)
-                count += 1;
-        }
-        NSLog(@" Selected Cards = %i", count);
-        [self updateUI];
+        self.game.cardsToMatch= [self.matchMode intValue];
+
     }
     
-   // [self updateUI];
+    int chosenButtonIndex = [self.cardButtons indexOfObject:sender];
+    [self.game chooseCardAtIndex:chosenButtonIndex];
+   
+   [self updateUI];
 }
 
 // re-deal function - hw2 > #2
@@ -79,16 +67,7 @@
     if (!self.gameModeSegmentedControl.enabled) {
         self.gameModeSegmentedControl.enabled = YES;
     }
-    if(!self.gameModeSwitch.enabled) {
-        self.gameModeSwitch.enabled = YES;
-    }
     [self updateUI];
-}
-
-- (IBAction)switchGameMode:(UISwitch *)sender {
-    NSLog(@" The switch is - %d", self.gameModeSwitch.isOn);
-    NSLog(@" The segment control is - %d", self.gameModeSegmentedControl.selectedSegmentIndex);
-
 }
 
 - (void)updateUI
