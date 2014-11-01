@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *gameModeSegmentedControl;
 @property (strong, nonatomic) NSString *matchMode;
+@property (weak, nonatomic) IBOutlet UILabel *lastActionLabel;
 @end
 
 @implementation CardGameViewController
@@ -79,6 +80,7 @@
         [cardButton setBackgroundImage:[self backgroundImageForCard:card] forState:UIControlStateNormal];
         cardButton.enabled = !card.isMatched;
         self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d",self.game.score];
+        self.lastActionLabel.text = self.game.lastActionText;
     }
 }
 
